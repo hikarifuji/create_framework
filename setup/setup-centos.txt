@@ -1,0 +1,166 @@
+<<CentOS 8での環境構築マニュアル>>
+
+■Dockerのインストール
+
+    ●参考資料
+
+        以下の説明は、2020.12.25時点での以下のURLを参考にした手順です。
+        https://docs.docker.com/engine/install/centos/
+        https://docs.docker.com/compose/install/
+
+    ●前提条件
+
+        * 記載のコマンドは、CentOS 8で動作確認しました。
+
+        * セットアップは一般ユーザで行うものとします。
+            ユーザ名を oie としますので、適宜読み替えてください。
+
+        * DNSのAレコードでサブドメインでもアクセスできるようにしておいてください。
+            ex) *.example.com A 198.51.100.0
+
+        * 8888番ポートと7777番ポートにアクセスできる必要があります。
+
+    ●2020.01.03 追記
+
+        * Mariadbコンテナが起動しない方は、権限周りを疑い、うまくいくかを試してみてください。
+
+            ex1) 一般ユーザではなくrootで手順を実行する
+            ex2) chmod -R 777 enjoy-eats/docker/mariadb してみる
+
+    ●古いDockerを削除します。
+
+        以下のコマンドを実行します。
+
+        $ sudo dnf remove docker \
+                          docker-client \
+                          docker-client-latest \
+                          docker-common \
+                          docker-latest \
+                          docker-latest-logrotate \
+                          docker-logrotate \
+                          docker-engine
+
+    ●リポジトリを追加します。
+
+        $ sudo dnf config-manager \
+            --add-repo \
+            https://download.docker.com/linux/centos/docker-ce.repo
+
+    ●Dockerのインストールします。
+
+        $ sudo dnf install docker-ce docker-ce-cli containerd.io
+
+    ●サービスを登録します。
+
+        $ sudo systemctl enable docker
+
+    ●サービスを起動します。
+
+        $ sudo systemctl start docker
+
+    ●インストール成功していることを確認します。
+
+        $ docker --version
+
+    ●Docker Composeをインストールします。
+
+        $ sudo curl -L "https://github.com/docker/compose/releases/download/1.27.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+
+        $ sudo chmod +x /usr/local/bin/docker-compose
+
+        $ sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose
+
+    ●インストール成功していることを確認します。
+
+        $ docker-compose --version
+
+■ソースコードの配備
+
+    ●ダウンロードファイル一式を、{$HOME}にコピーします。
+        ここでは /home/oie 以下にコピーしました。
+
+        $  ls -ld $HOME/enjoy-eats/*
+        drwxr-xr-x  6 oie oie 4096 Dec 25 12:55 /home/oie/enjoy-eats/docker
+        -rw-r--r--  1 oie oie 1000 Dec 25 12:17 /home/oie/enjoy-eats/docker-compose.yml
+        drwxr-xr-x 19 oie oie 4096 Dec 25 12:30 /home/oie/enjoy-eats/src
+
+    ●アプリケーションが書き込むディレクトリに、書き込み権限を付与します。
+
+        $ chmod -R a+w /home/oie/enjoy-eats/src/upload
+        $ chmod -R a+w /home/oie/enjoy-eats/src/step*/logs
+
+    ●/home/oie/enjoy-eats/docker/apache/conf-enabled/enjoy-eats.conf を開き、
+
+            ServerName enjoy-eats-step1
+                        ↓
+            ServerName step1.example.com
+
+        のように書き換えます。結果として以下のようになります。
+
+        ------------------------------------------------------------
+        <VirtualHost *:80>
+            DocumentRoot "/var/www/html/enjoy-eats/step1/public"
+            ServerName step1.example.com
+        </VirtualHost>
+
+        <VirtualHost *:80>
+            DocumentRoot "/var/www/html/enjoy-eats/step2/public"
+            ServerName step2.example.com
+        </VirtualHost>
+
+        ...中略...
+
+        <VirtualHost *:80>
+            DocumentRoot "/var/www/html/enjoy-eats/step15/public"
+            ServerName step15.example.com
+        </VirtualHost>
+        ------------------------------------------------------------
+
+■Dockerコンテナの起動
+
+    ●Dockerイメージのビルド
+
+        $ cd $HOME/enjoy-eats
+        $ sudo docker-compose build --no-cache
+
+    ●Dockerコンテナの起動
+
+        $ sudo docker-compose up -d
+
+■Composerによる外部ライブラリのインストール
+
+    ●PHPのコンテナIDを調べます。
+
+        $ sudo docker ps 
+
+        -------------------------------------------------------------
+        CONTAINER ID   IMAGE                   COMMAND                  CREATED         STATUS         PORTS                    NAMES
+        f05a4e379a9f   enjoy-eats_php          "docker-php-entrypoi…"   2 minutes ago   Up 2 minutes   0.0.0.0:8888->80/tcp     enjoy-eats_php_1
+        f4b2ac784d94   mariadb:10.5.4          "docker-entrypoint.s…"   2 minutes ago   Up 2 minutes   0.0.0.0:3333->3306/tcp   mariadb_host
+        45e37ab5d492   phpmyadmin/phpmyadmin   "/docker-entrypoint.…"   2 minutes ago   Up 2 minutes   0.0.0.0:7777->80/tcp     phpmyadmin_host
+        -------------------------------------------------------------
+
+        出力結果の、enjoy-eats_phpの行にあるコンテナIDを控えてください。
+        この例の場合「f05a4e379a9f」がコンテナIDです。
+
+    ●Dockerコンテナへのログイン
+
+        $ sudo docker exec -it f05a4e379a9f bash
+
+    ●Composerによる外部ライブラリのインストール
+
+        # cd /var/www/html/enjoy-eats
+        # sh install-all.sh
+
+■データベースのセットアップ
+
+    ●クライアントPCから、以下のURLにアクセスしてください。
+        http://php-honkaku-test.tokyo:7777
+
+    ●setup-windows.pdfの13～16ページの記述に沿って、データベーステーブルを作成してください。
+
+■動作確認
+
+    以下のURLにアクセスして、正常に画面が表示されることを確認してください。
+    http://step15.php-honkaku-test.tokyo:8888
+

@@ -1,0 +1,56 @@
+CREATE TABLE articles (
+  id                   SERIAL               PRIMARY KEY          COMMENT 'ID',
+  created              TIMESTAMP            NOT NULL             COMMENT '作成日時',
+  changed              TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '変更日時',
+  user_id              BIGINT               NOT NULL             COMMENT '投稿者',
+  category             SMALLINT             NOT NULL             COMMENT 'カテゴリ',
+  title                VARCHAR(255)         NOT NULL             COMMENT '記事タイトル',
+  contents             TEXT                 NOT NULL             COMMENT '記事本文',
+  photo1               VARCHAR(255)                              COMMENT '写真1',
+  photo2               VARCHAR(255)                              COMMENT '写真2',
+  photo3               VARCHAR(255)                              COMMENT '写真3',
+  pv                   BIGINT               DEFAULT 0            COMMENT 'PV数',
+  likes                BIGINT               DEFAULT 0            COMMENT 'おいしイイね数',
+  rank                 INTEGER                                   COMMENT 'ランキング順位'
+)
+COMMENT = '投稿記事';
+
+CREATE TABLE users (
+  id                   SERIAL               PRIMARY KEY          COMMENT 'ID',
+  created              TIMESTAMP            NOT NULL             COMMENT '作成日時',
+  changed              TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '変更日時',
+  name                 VARCHAR(255)         NOT NULL             COMMENT 'ハンドルネーム',
+  mail                 VARCHAR(190)         NOT NULL UNIQUE      COMMENT 'メールアドレス',
+  password             VARCHAR(190)         NOT NULL             COMMENT 'パスワード'
+)
+COMMENT = 'ユーザ情報';
+
+CREATE TABLE article_comments (
+  id                   SERIAL               PRIMARY KEY          COMMENT 'ID',
+  created              TIMESTAMP            NOT NULL             COMMENT '作成日時',
+  changed              TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '変更日時',
+  user_id              BIGINT               NOT NULL             COMMENT '投稿者',
+  article_id           BIGINT               NOT NULL             COMMENT '記事ID',
+  comment              TEXT                 NOT NULL             COMMENT 'コメント'
+)
+COMMENT = '投稿記事へのコメント';
+
+CREATE TABLE article_categories (
+  id                   SERIAL               PRIMARY KEY          COMMENT 'ID',
+  created              TIMESTAMP            NOT NULL             COMMENT '作成日時',
+  changed              TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '変更日時',
+  code                 SMALLINT             NOT NULL             COMMENT 'カテゴリコード',
+  category             VARCHAR(255)         NOT NULL             COMMENT 'カテゴリ名称',
+  sort                 SMALLINT             NOT NULL             COMMENT 'ソート順'
+)
+COMMENT = '投稿記事カテゴリ';
+
+CREATE TABLE tests (
+  id                   SERIAL               PRIMARY KEY          COMMENT 'ID',
+  created              TIMESTAMP            NOT NULL             COMMENT '作成日時',
+  changed              TIMESTAMP            NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '変更日時',
+  value1               TEXT                                      COMMENT '実験用カラム1',
+  value2               TEXT                                      COMMENT '実験用カラム2',
+  value3               TEXT                                      COMMENT '実験用カラム3'
+)
+COMMENT = '実験用のテーブル';

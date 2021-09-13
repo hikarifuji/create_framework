@@ -1,0 +1,14 @@
+<?php echo $this->showErrors($this->errors); ?>
+<h2>ユーザ登録</h2>
+<form name="post-form" method="post" action="" >
+    <table width="700px">
+        <tr>
+            <th>確認コード</th>
+            <td>
+                <input type="text" name="auth-code" class="form-item" >
+            </td>
+        </tr>
+    </table>
+    <br>
+    <button type="submit" name="send" value="send">次の画面へ</button>
+</form>

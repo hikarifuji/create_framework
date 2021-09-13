@@ -1,0 +1,6 @@
+<h2>ユーザTOPページ</h2>
+<p><?=$this->escape($this->message1)?></p>
+<p><?=$this->escape($this->message2)?></p>
+<p><?=$this->escape($this->message3)?></p>
+<p>ビューヘルパーでプルダウンを作る</p>
+<?=$this->formSelect('sample', 'red', ['style' => 'width:300px'], ['blue' => '青', 'red' => '赤', 'green' => '緑'])?>

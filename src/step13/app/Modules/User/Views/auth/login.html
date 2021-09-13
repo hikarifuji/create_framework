@@ -1,0 +1,21 @@
+<?php echo $this->showErrors($this->errors); ?>
+<h2>認証</h2>
+<form name="post-form" method="post" action="">
+    <input type="hidden" name="csrf_token" value="<?=$this->escape($this->csrfToken)?>">
+    <table width="700px">
+        <tr>
+            <th>メールアドレス</th>
+            <td>
+                <input type="text" name="mail" class="form-item">
+            </td>
+        </tr>
+        <tr>
+            <th>パスワード</th>
+            <td>
+                <input type="password" name="password" class="form-item">
+            </td>
+        </tr>
+    </table>
+    <br>
+    <button type="submit" name="send" value="send">ログイン</button>
+</form>

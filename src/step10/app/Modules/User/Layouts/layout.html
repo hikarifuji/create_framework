@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title><?=$this->escape($this->layoutTitle)?></title>
+    <link rel="stylesheet" href="/assets/css/user/main.css">
+</head>
+<body>
+<h1>エンジョイ！イーツ</h1>
+<ul id="nav">
+    <li><a href="/article">記事一覧</a></li>
+    <li><a href="/article/rank">記事ランキング</a></li>
+    <li><a href="/post">投稿する</a></li>
+    <?php if ($this->isLogin === true): ?>
+        <li><a href="/auth/logout">ログアウト</a></li>
+    <?php else: ?>
+        <li><a href="/auth/login">ログイン</a></li>
+    <?php endif;?>
+    <li><a href="/user/start">ユーザ登録</a></li>
+</ul>
+<?php include($this->templatePath); ?>
+</body>
+</html>

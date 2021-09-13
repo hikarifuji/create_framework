@@ -1,0 +1,4 @@
+insert into article_categories(code, category, sort) values(1, 'ランチ', 1);
+insert into article_categories(code, category, sort) values(2, 'ディナー', 2);
+insert into article_categories(code, category, sort) values(3, 'ティータイム', 3);
+

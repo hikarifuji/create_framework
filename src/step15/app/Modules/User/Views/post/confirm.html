@@ -1,0 +1,38 @@
+<h2>投稿する</h2>
+<form name="post-form" method="post" action="/post/complete">
+    <input type="hidden" name="csrf_token" value="<?=$this->escape($this->csrfToken)?>">
+    <table width="700px">
+        <tr>
+            <th>カテゴリ</th>
+            <td>
+                <?=$this->escape($this->categories[$this->category])?>
+            </td>
+        </tr>
+        <tr>
+            <th>タイトル</th>
+            <td>
+                <?=$this->escape($this->title)?>
+            </td>
+        </tr>
+        <tr>
+            <th>本文</th>
+            <td>
+                <?=nl2br($this->escape($this->contents))?>
+            </td>
+        </tr>
+        <?php for ($i = 1; $i <= 3; $i++) : ?>
+            <tr>
+                <th>写真<?=$i?></th>
+                <td>
+                    <?php if ($this->{"photo{$i}"}) : ?>
+                        <img src="/image/confirm?num=<?=$i?>">
+                    <?php endif;?>
+                </td>
+            </tr>
+        <?php endfor; ?>
+
+    </table>
+    <br>
+    <button type="submit" value="send">投稿する</button>
+    <button type="button" value="back" onclick="history.back()">戻る</button>
+</form>

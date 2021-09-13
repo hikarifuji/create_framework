@@ -1,0 +1,27 @@
+<?php echo $this->showErrors($this->errors); ?>
+<h2>ユーザ登録</h2>
+<form name="post-form" method="post" action="">
+    <input type="hidden" name="csrf_token" value="<?=$this->escape($this->csrfToken)?>">
+    <table width="700px">
+        <tr>
+            <th>ハンドルネーム</th>
+            <td>
+                <input type="text" name="name" class="form-item" value="<?=$this->escape($this->name)?>">
+            </td>
+        </tr>
+        <tr>
+            <th>パスワード</th>
+            <td>
+                <input type="password" name="password" class="form-item">
+            </td>
+        </tr>
+        <tr>
+            <th>パスワード(確認)</th>
+            <td>
+                <input type="password" name="password_confirm" class="form-item">
+            </td>
+        </tr>
+    </table>
+    <br>
+    <button type="submit" name="send" value="send">本登録する</button>
+</form>

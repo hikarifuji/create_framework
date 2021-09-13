@@ -1,0 +1,29 @@
+<?php echo $this->showErrors($this->errors); ?>
+<h2>記事ランキング</h2>
+<table width="1000px">
+    <tr>
+        <th>ランク</th>
+        <th>投稿者</th>
+        <th>カテゴリ</th>
+        <th>タイトル</th>
+        <th>画像1</th>
+    </tr>
+    <?php for ($rank = 1; $rank <= count($this->articles); $rank++) :?>
+        <?php $article = $this->articles[$rank - 1];?>
+        <tr>
+            <td><?=$this->escape($rank)?>位</td>
+            <td><?=$this->escape($article['user_name'])?></td>
+            <td><?=$this->escape($this->categories[$article['category']])?></td>
+            <td>
+                <a href="/article/detail?id=<?=$this->escape($article['id'])?>">
+                    <?=$this->escape($article['title'])?>
+                </a>
+            </td>
+            <?php if ($article['photo1']) : ?>
+                <td><img src="/image/show?article=<?=$this->escape($article['id'])?>&num=1" class="article-image-s"></td>
+            <?php else : ?>
+                <td></td>
+            <?php endif;?>
+        </tr>
+    <?php endfor;?>
+</table>

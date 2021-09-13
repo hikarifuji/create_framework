@@ -1,0 +1,64 @@
+<?php echo $this->showErrors($this->errors); ?>
+<h2>記事</h2>
+
+<table width="1000px">
+    <tr>
+        <th>カテゴリ</th>
+        <td><?=$this->escape($this->categories[$this->article['category']])?></td>
+    </tr>
+    <tr>
+        <th>タイトル</th>
+        <td><?=$this->escape($this->article['title'])?></td>
+    </tr>
+    <tr>
+        <th>本文</th>
+        <td><?=nl2br($this->escape($this->article['contents']))?></td>
+    </tr>
+    <?php for ($photoNumber = 1; $photoNumber <= 3; $photoNumber++) : ?>
+        <tr>
+            <th>画像<?=$this->escape($photoNumber)?></th>
+            <?php if ($this->article["photo{$photoNumber}"]) : ?>
+                <td><img src="/image/show?article=<?=$this->escape($this->article['id'])?>&num=<?=$this->escape($photoNumber)?>" class="article-image-m"></td>
+            <?php else : ?>
+                <td></td>
+            <?php endif;?>
+        </tr>
+    <?php endfor;?>
+</table>
+<br>
+<form name="like-form" action="" method="POST">
+    <input type="hidden" name="csrf_token" value="<?=$this->escape($this->csrfToken)?>">
+    <button type="image" name="send-like" value="send-like" style="border: none;background: transparent;"><img src="/assets/image/bueno.png" ></button>
+    現在カウント：<?=$this->escape(intval($this->article['likes']));?>
+</form>
+
+<?php if (count($this->comments) > 0) : ?>
+    <h3>記事へのコメント</h3>
+    <table width="1000px">
+        <?php foreach ($this->comments as $comment) : ?>
+            <tr>
+                <td width="30%">
+                    <?=$this->escape($comment['user_name'])?><br>
+                    <?=$this->escape($comment['changed'])?>
+                </td>
+                <td><?=nl2br($this->escape($comment['comment']))?></td>
+            </tr>
+        <?php endforeach;?>
+    </table>
+<?php else :?>
+    <h3>記事へのコメントはありません</h3>
+<?php endif; ?>
+
+<?php if ($this->isLogin === true) : ?>
+<h3>記事へのコメントを書く</h3>
+    <form name="comment-form" action="" method="POST">
+        <input type="hidden" name="csrf_token" value="<?=$this->escape($this->csrfToken)?>">
+        <div>
+            <textarea name="comment" rows="10" style="width:1000px"></textarea>
+            <br>
+            <button type="submit" name="send-comment" value="send-comment">投稿する</button>
+        </div>
+    </form>
+<?php else: ?>
+    <p>コメントを投稿するにはログインしてください。</p>
+<?php endif;?>

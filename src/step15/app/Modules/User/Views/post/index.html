@@ -1,0 +1,44 @@
+<?php echo $this->showErrors($this->errors); ?>
+<h2>投稿する</h2>
+<form name="post-form" method="post" action="" enctype="multipart/form-data">
+    <table width="700px">
+        <tr>
+            <th>カテゴリ</th>
+            <td>
+                <?=$this->formSelect('category', $this->category, ['id' => 'category'], $this->categories)?>
+            </td>
+        </tr>
+        <tr>
+            <th>タイトル</th>
+            <td>
+                <input type="text" name="title" class="form-item" value="<?=$this->escape($this->title)?>">
+            </td>
+        </tr>
+        <tr>
+            <th>本文</th>
+            <td>
+                <textarea name="contents" class="form-item" rows="20"><?=$this->escape($this->contents)?></textarea>
+            </td>
+        </tr>
+        <tr>
+            <th>写真1</th>
+            <td>
+                <input type="file" name="photo1">
+            </td>
+        </tr>
+        <tr>
+            <th>写真2</th>
+            <td>
+                <input type="file" name="photo2">
+            </td>
+        </tr>
+        <tr>
+            <th>写真3</th>
+            <td>
+                <input type="file" name="photo3">
+            </td>
+        </tr>
+    </table>
+    <br>
+    <button type="submit" name="send" value="send">確認画面へ</button>
+</form>
